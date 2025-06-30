@@ -1,0 +1,31 @@
+#ifndef __SAFE_QUEUE__
+#define __SAFE_QUEUE__
+
+#include <queue>
+#include <mutex>
+#include <optional>
+#include <condition_variable>
+
+template <typename T>
+class SafeQueue final {
+private:
+    std::queue<T> mQueue;
+    std::mutex mMutex;
+    std::condition_variable mCv;
+
+public:
+    SafeQueue() = default;
+    ~SafeQueue() = default;
+    SafeQueue(const SafeQueue&) = delete;
+    SafeQueue(SafeQueue&&) = delete;
+    SafeQueue& operator=(const SafeQueue&) = delete;
+    SafeQueue& operator=(SafeQueue&&) = delete;
+
+    void push(const T& value);
+    T get();
+    std::optional<T> try_get();
+};
+
+#include "safequeue.tpp"
+
+#endif  // __SAFE_QUEUE__
